@@ -203,6 +203,6 @@ mod tests {
     fn part2_is_correct() {
         let result = part2("./data/day2.txt");
 
-        assert_eq!(12, result);
+        assert_eq!(9975, result);
     }
 }
