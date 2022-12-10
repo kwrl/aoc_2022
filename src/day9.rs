@@ -7,6 +7,37 @@ struct Vec2 {
     y: i32,
 }
 
+struct Knot<'a> {
+    position: Vec2,
+    next: &'a mut Option<&'a mut Knot<'a>>,
+}
+
+impl<'a> Knot<'a> {
+    fn tail(&mut self) -> &Knot<'a> {
+        return match self.next {
+            Some(n) => n.tail(),
+            None => self,
+        };
+    }
+
+    fn step(&mut self, step: &Vec2) {
+        self.position = self.position.plus(step);
+
+        match self.next {
+            Some(n) => {
+                let difference = self.position.minus(&n.position);
+
+                if difference.x.abs() >= 2 || difference.y.abs() >= 2 {
+                    let direction = &difference.direction();
+
+                    n.step(direction);
+                }
+            }
+            None => {}
+        }
+    }
+}
+
 static UP: Vec2 = Vec2 { x: 0, y: -1 };
 static RIGHT: Vec2 = Vec2 { x: 1, y: 0 };
 static DOWN: Vec2 = Vec2 { x: 0, y: 1 };
